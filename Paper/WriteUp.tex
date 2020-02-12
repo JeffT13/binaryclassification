@@ -18,7 +18,8 @@
 %----------------------------------------------------------------------------------------
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
-\documentclass[10pt, a4paper, twocolumn]{article} % 10pt font size (11 and 12 also possible), A4 paper (letterpaper for US letter) and two column layout (remove for one column)
+
+\documentclass[12pt, a4paper]{article} % 10pt font size (11 and 12 also possible), A4 paper (letterpaper for US letter) and two column layout (remove for one column)
 
 \input{structure.tex} % Specifies the document structure and loads requires packages
 
@@ -26,23 +27,21 @@
 %	ARTICLE INFORMATION
 %----------------------------------------------------------------------------------------
 
-\title{Effective Methods for Capturing Cattle Rustlers} % The article title
+\title{Supervised Classification of Monte Carlo Simulated Air Shower Data} % The article title
 
 \author{
-	\authorstyle{John Marston\textsuperscript{1,2,3} and Bonnie MacFarlane\textsuperscript{2,3}} % Authors
-	\newline\newline % Space before institutions
-	\textsuperscript{1}\institution{Universidad Nacional Aut�noma de M�xico, Mexico City, Mexico}\\ % Institution 1
-	\textsuperscript{2}\institution{University of Texas at Austin, Texas, United States of America}\\ % Institution 2
-	\textsuperscript{3}\institution{\texttt{LaTeXTemplates.com}} % Institution 3
+	\authorstyle{Jeffrey Tumminia} % Authors
 }
 
 % Example of a one line author/institution relationship
-%\author{\newauthor{John Marston} \newinstitution{Universidad Nacional Aut�noma de M�xico, Mexico City, Mexico}}
+%\author{\newauthor{John Marston} \newinstitution{Universidad Nacional Autónoma de México, Mexico City, Mexico}}
 
-\date{\today} % Add a date here if you would like one to appear underneath the title block, use \today for the current date, leave empty for no date
 
 %----------------------------------------------------------------------------------------
+\doublespacing
 
+\date{}
+  
 \begin{document}
 
 \maketitle % Print the title
@@ -53,118 +52,299 @@
 %	ABSTRACT
 %----------------------------------------------------------------------------------------
 
-\lettrineabstract{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce maximus nisi ligula. Morbi laoreet ex ligula, vitae lobortis purus mattis vel. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec ac metus ut turpis mollis placerat et nec enim. Duis tristique nibh maximus faucibus facilisis. Praesent in consequat leo. Maecenas condimentum ex rhoncus, elementum diam vel, malesuada ante.}
+\abstract{As we probe nature for more fundamental theories of reality, we find that experimentation is yielding larger and noisier datasets \citep{PETA}. This leads to calls for effective data science techniques in projects such as the MAGIC (Major Atmospheric Gamma Imaging Cherenkov) Telescope, a ground based high energy electromagnetic wave detector \citep{MAGIC}. One application of MAGIC is to observe high energy EM air showers caused by $\gamma$-rays, where $\gamma$-ray observation is usually done by much more costly satellite/balloon based telescopes \citep{energyCRs}. We generate multiple Supervised Learning models, tuned selected models and build a hard Voting Classifier to classify these air showers. All models are trained,validated and tested using the MAGIC dataset $M$, generated using a Monte Carlo Air shower Simulation tool called CORSIKA \citep{DataProd}. $M$ is a collection 19020 air showers classified as the result of a $\gamma$-ray or hadronic shower which is expected to be challenging for linear classification, and we follow protocol and benchmarks outlined in the by the developers of $M$ \citep{CaseStudy} }
 
 %----------------------------------------------------------------------------------------
 %	ARTICLE CONTENTS
 %----------------------------------------------------------------------------------------
 
-\section{Section}
+\newpage
+\section{Business and Data Understanding}
 
-This sentence requires citation \citep{Reference1}. This sentence requires multiple citations to imply that it is better supported \citep{Reference2,Reference3}. Finally, when conducting an appeal to authority, it can be useful to cite a reference in-text, much like \cite{Reference1} do quite a bit. Oh, and make sure to check out the bear in Figure \ref{bear}.
+\subsection{Background of $\gamma$-Rays}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce maximus nisi ligula. Morbi laoreet ex ligula, vitae lobortis purus mattis vel. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec ac metus ut turpis mollis placerat et nec enim. Duis tristique nibh maximus faucibus facilisis. Praesent in consequat leo. Maecenas condimentum ex rhoncus, elementum diam vel, malesuada ante. Fusce pulvinar, mauris pretium placerat venenatis, lectus ex tempus lacus, id suscipit libero lorem eu augue. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+$\gamma$ rays were first identified as waves in the electromagnetic (EM) spectrum in the early 1900's by Ernest Rutherford \citep{Ruth}. Since the discovery, physicists have been trying to develop tools to detect $\gamma$-rays and their properties. Explorer XI was launched by NASA in 1961, and was the first telescope dedicated to $\gamma$-ray detection, which detected a total of 22 $\gamma$-ray events in it's lifetime. Since then, technology has progressed and we have continued to put up larger and more accurate detectors, allowing us to map our galaxy in $\gamma$-rays and detect the emission of $\gamma$-rays from astrological events far out into the universe, giving us a proxy to analyze them. 
 
-Aliquam elementum nulla at arcu finibus aliquet. Praesent congue ultrices nisl pretium posuere. Nunc vel nulla hendrerit, ultrices justo ut, ultrices sapien. Duis ut arcu at nunc pellentesque consectetur. Vestibulum eget nisl porta, ultricies orci eget, efficitur tellus. Maecenas rhoncus purus vel mauris tincidunt, et euismod nibh viverra. Mauris ultrices tellus quis ante lobortis gravida. Duis vulputate viverra erat, eu sollicitudin dui. Proin a iaculis massa. Nam at turpis in sem malesuada rhoncus. Aenean tempor risus dui, et ultrices nulla rutrum ut. Nam commodo fermentum purus, eget mattis odio fringilla at. Etiam congue et ipsum sed feugiat. Morbi euismod ut purus et tempus. Etiam est ligula, aliquam eget porttitor ut, auctor in risus. Curabitur at urna id dui lobortis pellentesque.
+Though these telescopes are absolutely amazing in their own right, they have all had at least one major drawback to them, being that they must reside well outside of our atmosphere to function. For instance, the International Gamma-Ray Astrophysics Laboratory (INTEGRAL), which was launched in 2002, reaches a maximum distance above the earths surface of about 150,000km, where as the International Space Station reaches (on average) about 400km. This means that once our $\gamma$-ray telescopes are launched into their orbit, we can never service them again. This has been one of the main bottlenecks limiting what research can be performed, as these incredible telescopes can deplete their energy source or be thrown off of their intended orbit, possibly rendering them useless. This is costly, not only from the perspective of spending resources, but also in the amount of space debris build up this leads to over time. In a time where funding for scientific research is growing thinner with respect to the amount needed to continue progress, there arises a clear motivation to find a better solution for observing characteristics of $\gamma$-rays, if possible.
 
-\begin{align}
-	A = 
-	\begin{bmatrix}
-		A_{11} & A_{21} \\
-		A_{21} & A_{22}
-	\end{bmatrix}
-\end{align}
+\subsection{$\gamma$-Ray Detection}
 
-Donec nec nibh sagittis, finibus mauris quis, laoreet augue. Maecenas aliquam sem nunc, vel semper urna hendrerit nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas pellentesque dolor lacus, sit amet pretium felis vestibulum finibus. Duis tincidunt sapien faucibus nisi vehicula tincidunt. Donec euismod suscipit ligula a tempor. Aenean a nulla sit amet magna ullamcorper condimentum. Fusce eu velit vitae libero varius condimentum at sed dui.
+This leads us to the MAGIC (Major Atmospheric Gamma Imaging Cherenkov) Telescope, a ground based high energy electromagnetic wave detector \citep{MAGIC}. One of the goals of MAGIC is to be able to identify $\gamma$-rays that hit earth from the surface and analyze their properties, similar to the satellite based telescopes. In practice, however, this is extremely difficult. 
 
-In non leo tincidunt, tristique orci eu, suscipit ex. Fusce non lectus ut dolor tincidunt fermentum. Donec dictum mauris magna, ut dictum nisl finibus quis. Nulla elementum ipsum ut lectus sodales finibus. Nulla ac malesuada magna. Etiam arcu dolor, luctus eget elit a, volutpat vulputate mi. Donec elementum tellus libero, ut ornare orci dignissim lacinia. Nullam iaculis vehicula sem, at tempor tellus. Praesent eu nisi a elit viverra lobortis. Nullam eu metus et justo molestie posuere vitae imperdiet erat. Praesent at gravida dui. Vivamus mauris odio, efficitur eget lacus quis, mattis tristique risus. Mauris quis metus sed risus lobortis sollicitudin vitae vitae quam. Morbi leo turpis, aliquam at nunc sit amet, ultricies dictum lorem. Nam et fringilla elit. Vestibulum auctor, turpis ut facilisis tempor, arcu nibh tincidunt libero, quis blandit leo turpis a urna.
+A primary reason $\gamma$-rays are so difficult to identify from earth is due to our ozone layer, which filters out shorter EM wavelengths (like $\gamma$-rays and X-rays), which would be harmful to life on earth. This does eliminate any course for \textit{direct} detection. However, for very high energy cosmic rays, there is another phenomena we could use as a proxy for identifying them called Cherenkov Radiation. Cherenkov Radiation is usually described as akin to the sonic boom effect but for subatomic particles, where a charged particle is actually traveling faster in a given medium (such as our atmosphere) than a photon would typically travel at in that medium \citep{CherenkovRad}. Note, nothing asserts anything is traveling faster than the speed of light in a vacuum ($c$) in this phenomena. When a cosmic ray hit our upper atmosphere, it collides with atoms (specifically their nuclei) and cause air showers, which caused charged particles to rain down onto the earth's surface. For sufficiently high energy cosmic rays, these charged particles can emit Cherenkov Radiation, which MAGIC (and other ground-based telescopes out of our scope) can detect. This is our detection mechanic.
 
-%------------------------------------------------
+The major challenge of this method, however, is that $\gamma$-rays are not the only cosmic rays which cause Cherenkov Radiation. Another example of this are hadronic (further referred to as $h$) rays, which are much more common and produce showers with similar features. Furthermore, there is random variance in the patterns of the showers since our atmosphere is not perfectly uniform, thus variance in the characteristics of events of the same class is expected. 
 
-\subsection{Subsection}
+\subsection{Detection as a Classification Problem}
 
-Nam ante risus, tempor nec lacus ac, congue pretium dui. Donec a nisl est. Integer accumsan mauris eu ex venenatis mollis. Aliquam sit amet ipsum laoreet, mollis sem sit amet, pellentesque quam. Aenean auctor diam eget erat venenatis laoreet. In ipsum felis, tristique eu efficitur at, maximus ac urna. Aenean pulvinar eu lorem eget suscipit. Aliquam et lorem erat. Nam fringilla ante risus, eget convallis nunc pellentesque non. Donec ipsum nisl, consectetur in magna eu, hendrerit pulvinar orci. Mauris porta convallis neque, non viverra urna pulvinar ac. Cras non condimentum lectus. Aliquam odio leo, aliquet vitae tellus nec, imperdiet lacinia turpis. Nam ac lectus imperdiet, luctus nibh a, feugiat urna.
+This yields a difficult classification problem, where there is no obvious feature or set of features such that we can easily discriminate results of showers from $\gamma$-rays from $h$-rays. This has led to a wide variety of research in the field attempting to find a mechanism to classify these events. A popular tool for performing this research is CORSIKA: A Monte Carlo Code to Simulate Extensive Air Showers \citep{DataProd}. Using CORSIKA, researchers can simulate air shower events based on numerous parameters which develop a classified dataset which we can then model off of. If one could build an adequate model on the developed dataset, it could be utilized on incoming observations to classify events in real time. It could also possibly identify unusual events that are of interest to researchers. CORSIKA is extremely versatile and could offer a framework for other Monte Carlo Simulation of physical phenomena as well, but that is out of scope. 
+
+
+One example of this dataset generation is the MAGIC Gamma Telescope Data Set (further referred to as $M$), done by Bock \citep{CaseStudy} and publicly available on the UCI Machine Learning Repository. \cite{CaseStudy} will be heavily referenced going forward, as they perform introductory analysis on the dataset, discuss the dataset limitations, and set performance thresholds for models. We analyze $M$, perform feature engineering and resampling, and train multiple models under varying hyper parameters and build a Voting Classifier in efforts to adequately classify events of $\gamma$-ray air showers based on this dataset. Below are some characteristics noted in the documentation of $M$ and verified in our analysis to remain mindful of throughout this research. 
 
 \begin{itemize}
-	\item First item in a list 
-	\item Second item in a list 
-	\item Third item in a list
+	\item $M$ contains no missing values
+	\item All Features are real numbers
+	\item Number of $\gamma$-ray events $>>$ Number of $h$-ray events (purposely)
+	\item $dim \left( M \right) = n \times m, n=19020, m=11 \rightarrow n>>m$
 \end{itemize}
 
-Nunc egestas quis leo sed efficitur. Donec placerat, dui vel bibendum bibendum, tortor ligula auctor elit, aliquet pulvinar leo ante nec tellus. Praesent at vulputate libero, sit amet elementum magna. Pellentesque sodales odio eu ex interdum molestie. Suspendisse lacinia, augue quis interdum posuere, dolor ipsum euismod turpis, sed viverra nibh velit eget dolor. Curabitur consectetur tempus lacus, sit amet luctus mauris interdum vel. Curabitur vehicula convallis felis, eget mattis justo rhoncus eget. Pellentesque et semper lectus.
+We also note for our model analysis and scoring that we are much more adverse to false positives than false negatives, as is the case for identifying most phenomena in natural sciences. From this, we declare that our primary model evaluation metrics will be the AUC and precision of the model, though we will keep in mind our recall. These restrictions are also acknowledged in \citep{CaseStudy}. Crucially, when evaluating models which return a probability, we denote that the model should predict an event is a $\gamma$ if and only if the probability determined is greater than a value $t$. More precisely, we define a value $t \in (0,1)$ such that, given an algorithm $A$ which predicts probabilities and $M_i$ denotes event $i$ of $M$
 
-\begin{description}
-	\item[First] This is the first item
-	\item[Last] This is the last item
-\end{description}
+\begin{equation} \label{eq1}
+\begin{split}
+0< A \left( M_i \right) = p_i < 1 \; \forall \; i \in \left\{1,\cdots, n\right\}  \\ 
+p_i:=P \left(M_{i, Class}=\gamma \right) \\
+M_{i, Class}=\gamma \Leftrightarrow p_i > t
+\end{split}
+\end{equation}
 
-Donec nec nibh sagittis, finibus mauris quis, laoreet augue. Maecenas aliquam sem nunc, vel semper urna hendrerit nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas pellentesque dolor lacus, sit amet pretium felis vestibulum finibus. Duis tincidunt sapien faucibus nisi vehicula tincidunt. Donec euismod suscipit ligula a tempor. Aenean a nulla sit amet magna ullamcorper condimentum. Fusce eu velit vitae libero varius condimentum at sed dui.
 
-%------------------------------------------------
+\section{Data Preparation}
 
-\subsection{Subsection}
+\subsection{Feature Analysis}
 
-In hac habitasse platea dictumst. Etiam ac tortor fermentum, ultrices libero gravida, blandit metus. Vivamus sed convallis felis. Cras vel tortor sollicitudin, vestibulum nisi at, pretium justo. Curabitur placerat elit nunc, sed luctus ipsum auctor a. Nulla feugiat quam venenatis nulla imperdiet vulputate non faucibus lorem. Curabitur mollis diam non leo ullamcorper lacinia.
+The first step of our modeling process in analyze our features. We examine the inter-feature correlation and the AUC of the feature as a predictor of our target (Class). We use a correlation matrix and pairplot to show the former, and a uni-variate ROC curve for each feature to show the latter. Univariate chart and Correlation matrix below, pairplot can be found in the appendix (Figure 4)
 
-Morbi iaculis posuere arcu, ut scelerisque sem. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris placerat urna id enim aliquet, non consequat leo imperdiet. Phasellus at nibh ut tortor hendrerit accumsan. Phasellus sollicitudin luctus sapien, feugiat facilisis risus consectetur eleifend. In quis luctus turpis. Nulla sed tellus libero. Pellentesque metus tortor, convallis at tellus quis, accumsan faucibus nulla. Fusce auctor eleifend volutpat. Maecenas vel faucibus enim. Donec venenatis congue congue. Integer sit amet quam ac est aliquam aliquet. Ut commodo justo sit amet convallis scelerisque.
-
-\begin{enumerate}
-	\item First numbered item in a list
-	\item Second numbered item in a list
-	\item Third numbered item in a list
-\end{enumerate}
-
-Aliquam elementum nulla at arcu finibus aliquet. Praesent congue ultrices nisl pretium posuere. Nunc vel nulla hendrerit, ultrices justo ut, ultrices sapien. Duis ut arcu at nunc pellentesque consectetur. Vestibulum eget nisl porta, ultricies orci eget, efficitur tellus. Maecenas rhoncus purus vel mauris tincidunt, et euismod nibh viverra. Mauris ultrices tellus quis ante lobortis gravida. Duis vulputate viverra erat, eu sollicitudin dui. Proin a iaculis massa. Nam at turpis in sem malesuada rhoncus. Aenean tempor risus dui, et ultrices nulla rutrum ut. Nam commodo fermentum purus, eget mattis odio fringilla at. Etiam congue et ipsum sed feugiat. Morbi euismod ut purus et tempus. Etiam est ligula, aliquam eget porttitor ut, auctor in risus. Curabitur at urna id dui lobortis pellentesque.
-
-\begin{table}
-	\caption{Example table}
-	\centering
-	\begin{tabular}{llr}
-		\toprule
-		\multicolumn{2}{c}{Name} \\
-		\cmidrule(r){1-2}
-		First Name & Last Name & Grade \\
-		\midrule
-		John & Doe & $7.5$ \\
-		Richard & Miles & $5$ \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-%------------------------------------------------
-
-\section{Section}
-
-\begin{figure}
-	\includegraphics[width=\linewidth]{bear.jpg} % Figure image
-	\caption{A majestic grizzly bear} % Figure caption
-	\label{bear} % Label for referencing with \ref{bear}
+\begin{figure}[!h]
+\centering
+\begin{tabular}{cc}
+\subfloat[Univariate Analysis]{\includegraphics[width = 3in, height=3in]{Univariate_1.png}} &
+\subfloat[Correlation Matrix]{\includegraphics[width = 3in]{CorrMat_1.png}} \\
+\end{tabular}
+\caption{Feature Correlation}
 \end{figure}
 
-In hac habitasse platea dictumst. Vivamus eu finibus leo. Donec malesuada dui non sagittis auctor. Aenean condimentum eros metus. Nunc tempus id velit ut tempus. Quisque fermentum, nisl sit amet consectetur ornare, nunc leo luctus leo, vitae mattis odio augue id libero. Mauris quis lectus at ante scelerisque sollicitudin in eu nisi. Nulla elit lacus, ultricies eu erat congue, venenatis semper turpis. Ut nec venenatis velit. Mauris lacinia diam diam, ac egestas neque sodales sed. Curabitur eu diam nulla. Duis nec turpis finibus, commodo diam sed, bibendum erat. Nunc in velit ullamcorper, posuere libero a, mollis mauris. Nulla vehicula quam id tortor ornare blandit. Aenean maximus tempor orci ultrices placerat. Aenean condimentum magna vulputate erat mattis feugiat.
+The only extrapolations we make from the charts above are that our feature {\tt fAlpha} has a much larger ROC than the rest of the features and that {\tt fConc} and {\tt fConc1} are highly (and linearly) correlated. We notice that our ratio of positive events to negative events is about $.65$, so an AUC of about $.78$ could be significant. We find application for this information when feature engineering 
 
-Quisque lacinia, purus id mattis gravida, sem enim fringilla erat, non dapibus est tellus pellentesque velit. Vivamus pretium sem quis leo placerat, at dignissim ex iaculis. Donec neque tortor, pharetra quis vestibulum id, tempus scelerisque mi. Cras in mattis est. Integer nec lorem rutrum, semper ligula bibendum, iaculis neque. Sed in nunc placerat, viverra dui in, fringilla sem. Sed quis rutrum magna, vitae pellentesque eros.
+Our next step is to check if any feature or features provide an exceptional amount of mutual information, which we find using a standard decision tree. 
 
-Praesent maximus mauris vitae nisl pulvinar, at tristique tortor aliquam. Etiam sit amet nunc in nulla vulputate sollicitudin. Aliquam erat volutpat. Praesent pharetra gravida cursus. Quisque vulputate lacus nunc. Integer orci ex, porttitor quis sapien id, eleifend gravida mi. Etiam efficitur justo eget nulla congue mattis. Duis commodo vel arcu a pretium. Aenean eleifend viverra nisl, nec ornare lacus rutrum in.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width = 6in]{MI_1.png} 
+    \caption{Mutual Information by Feature}
+\end{figure}
 
-Vivamus pulvinar ac eros eu pellentesque. Duis nibh felis, sagittis sed lacus at, sagittis mattis nisi. Fusce ante dui, tincidunt in scelerisque ut, sagittis at magna. Fusce tincidunt felis et odio tincidunt imperdiet. Cras ut facilisis nisl. Aliquam vitae consequat metus, eget gravida augue. In imperdiet justo quis nulla venenatis accumsan. Aliquam aliquet consectetur tortor, at sollicitudin sapien porta sed. Donec efficitur mauris id rhoncus volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed bibendum purus dapibus tincidunt euismod. Nullam malesuada ultrices lacus, ut tincidunt dolor. Etiam imperdiet quam eget elit tincidunt scelerisque. Curabitur ut ullamcorper dui. Cras gravida porta leo, ut lobortis nisl venenatis pulvinar. Proin non semper nulla.
+We see that no feature stands out and a few are exceptionally unhelpful, namely {\tt fSize} and our correlated features {\tt fConc} and {\tt fConc1} again. Specifically, we see that {\tt fAlpha} is not actually providing any more information than most of the other features, bringing into question if the value of {\tt fAlpha} is actually deducible from our other features. This lessens our optimism for the predictive capabilities of {\tt fAlpha}.
 
-Praesent pretium nisl purus, id mollis nibh efficitur sed. Sed sit amet urna leo. Nulla sed imperdiet sem. Donec ut diam tristique, faucibus ligula vel, varius est. In ipsum ligula, elementum vitae velit ac, viverra tincidunt enim. Phasellus gravida diam id nisl interdum maximus. Ut semper, tortor vitae congue pharetra, justo odio commodo urna, vel tempus libero ex et risus. Vivamus commodo felis non venenatis rutrum. Sed pulvinar scelerisque augue in porta. Sed maximus libero nec tellus malesuada elementum. Proin non augue posuere, pellentesque felis viverra, varius urna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dignissim urna eget diam dictum, eget facilisis libero pulvinar.
+Though there are some insights to be had, overall this feature analysis is unfruitful. This should not be surprising, however, as this is expected of any sufficiently difficult classification problem with a small number of overall features. This encourages us to pursue feature engineering in our next step. 
 
-Aliquam ex tellus, hendrerit sed odio sit amet, facilisis elementum enim. Suspendisse potenti. Integer molestie ac augue sit amet fermentum. Vivamus ultrices ante nulla, vitae venenatis ipsum ullamcorper sed. Phasellus gravida felis sapien, ac porta purus pharetra quis. Sed eget augue tellus. Nam vitae hendrerit arcu, id iaculis ipsum. Pellentesque sed magna tortor.
+\subsection{Data/Feature Engineering}
 
-In ac tempus diam. Sed nec lobortis massa, suscipit accumsan justo. Quisque porttitor, ligula a semper euismod, urna diam dictum sem, sed maximus risus purus sit amet felis. Fusce elementum maximus nisi a mattis. Nulla vitae elit erat. Integer sit amet commodo risus, eget elementum nulla. Donec ultricies erat sit amet sem commodo iaculis. Donec euismod volutpat lacus, ut tempor est lacinia a. Vivamus auctor condimentum tincidunt. Praesent sed finibus urna. Sed pellentesque blandit magna et rhoncus.
+As mentioned, $M$ has a small number of features compared to events (10 features + Class compared to 19020 events). Thus, we can afford to develop new features which we can append to $M$ to create what we define as $M^{F}$ in the hopes that one or more aid in the classification. Before proceeding we first must acknowledge that, for feature engineering, domain knowledge would be very useful. There is of course some link between these features and the event class, but it is almost certainly non-linear. Because of our lack of domain knowledge, we resort to creating non-linear sub-features based off of our existing in hopes that we can catch some of that relationship. We also note that every additional feature is only a function of one other feature (aside from one exception), which is done due to computational limitations. In continuing research, our feature engineering would be more robust and include domain insight as well as multi-feature dependent additions.
 
-Integer vel turpis nec tellus sodales malesuada a vel odio. Fusce et lectus eu nibh rhoncus tempus vel nec elit. Suspendisse commodo orci velit, lacinia dictum odio accumsan et. Vivamus libero dui, elementum vel nibh non, fermentum venenatis risus. Aliquam sed sapien ac orci sodales tempus a eget dui. Morbi non dictum tortor, quis tincidunt nibh. Proin ut tincidunt odio.
+To create $M^{F}$, we take the square and cube of each feature aside from {\tt fSize}, {\tt fConc}, {\tt fConc1}, as well as the sum of {\tt fConc} and {\tt fConc1} as an extra feature (our one exception), along with the original $M$. We now see
 
-Pellentesque ac nisi dolor. Pellentesque maximus est arcu, eu scelerisque est rutrum vitae. Mauris ullamcorper vulputate vehicula. Praesent fermentum leo ac velit accumsan consectetur. Aliquam eleifend ex eros, ut lacinia tellus volutpat non. Pellentesque sit amet cursus diam. Maecenas elementum mattis est, in tincidunt ex pretium ac. Integer ultrices nunc rutrum, pretium sapien vitae, lobortis velit.
+$$dim \left( M \right) = n \times m, dim \left( M^{F} \right) = n \times m^* = 26$$
+
+Another characteristic of $M$ is the ratio of positive and negative events. In $M$, there are $12332 \gamma$ events and $6688 h$, so we upsample the $h$ events and input them into our new dataset defined $M^{U}$. Note that $M^{U}$ has the same amount of features as $M$, so
+
+$$dim \left( M^{U} \right) = n^* \times m , n^* = 24664 \left(12332 \gamma, 12332 h\right)$$
+
+The hope is that the extra negative events encourage our models to put more weight on the possibility of negative, implying more certainty when guessing positive events, improving our precision. 
+
+After building these datasets, we perform a similar feature analysis as was originally performed on $M$ to the features of $M^{F}$ not already in $M$. We found that no feature developed had any greater feature importance or AUC.  Note that $M^{U}$ would perform identically across all of our metrics, as we have only changed the event distribution. 
+
+\section{Modeling \& Evaluation}
+
+\subsection{Methods}
+
+So far, we have gained no insight into how we would build a classifier for this problem using standard feature analysis. As such, we resort to testing multiple models in efforts to find progress or patterns in the responses from the data. Before doing this, however, we must define how we will be evaluating our models, to know what progress would look like. Firstly, we note that we are using a testing size of $25\%$, and will for all training/testing splits (this does not apply to cross validation). Secondly, we set our predefined value $t=.8$, which is a threshold mentioned in \cite{CaseStudy}. We also explore results with $t=.9$, but we go on to find that our performance is too poor to maintain that level of certainty. This is further elaborated on in deployment. We also note that all models are trained/tested on a normalized variant of our datasets $M, M^{F}, M^{U}$. This is done for consistency and performance, as well as to ensure compatibility when we move on to our stacked voter. With this, we can outline our process. 
+
+We go on to build what we call our "Baseline Models", to get an understanding for how well a generic classifier is performing. After gathering some insight from our baselines, we go on to tune the parameters for a select number of models using stratified cross validation, performing this process across each of our 3 datasets which we will call $\bar{M} = \left\{ M, M^{F}, M^{U} \right\}$. It is important that we stratify since we look to examine how the ratio of positive and negative events in a dataset might impact model performance.  We then evaluate the performance of our tuned models, showing only the results of the models whose baselines were above average. 
+
+Finally, we build a stacked ensemble voting model, combining our three tuned models in an effort to improve our AUC. We attempt to see if different classifiers are correctly assessing different events such that a voter model would have increased event coverage. If we see a degradation in performance, we could also assess if a single model is performing exceptionally poorly and is essentially only correctly identifying a subset of a more robust model. This exploration yields less fruitful than we had hoped, but is rather efficient in its classification thus there is room for improvements and increases in complexity, and acts as another proxy for evaluating model performance. 
+
+
+\subsection{Baseline Models}
+
+The models we set baselines for are the following:
+
+\begin{itemize}
+	\item Decision Tree ($DT$)
+	\item Logistic Regression ($LR$)
+	\item Random Forest ($RF$)
+	\item SVM Linear Kernel ($SVM_L$)
+	\item SVM Polynomial Kernel* ($SVM_P$)
+	\item Random Forest with Bagging* ($RF_B$)
+\end{itemize}
+
+Models marked with an asterisk (*) signify that these were added to the baseline model list after initial testing. We noticed that on our initial training, $SVM_L$ took very long to run and performed very poorly, while $RF$ stood out in AUC. It is discussed in \cite{CaseStudy} that event classification is correlated with the energy level of air shower. This is not information we directly know, but we assert that if there is some non-linear relationship between the energy level of the air shower and our data, if we used models more capable of approximating a non-linear relationship, we should find better classification performance. We thus include other models that have shown to approximate or overcome non-linear relationships well.
+
+We also note that at this point, we have 3 isolated datasets. Therefore, we must train and set a baseline on each to see if our changes will help performance. This isn't too much of a challenge at the stage of setting baselines, but becomes a factor when we move on to hyper-parameter tuning. Baseline Tables and Charts are located in the appendix.
+
+\subsection{Model Tuning}
+
+After setting our baselines, we move on to model tuning. The main challenge we faced in our model tuning is performance. Some models are simply more computationally expensive than others, and thus training across a big search space of parameters is anywhere from impractical to impossible. Thus, we make some choices to moderate the computational complexity we will face. 
+
+First, we limit any cross-validation to 3 stratified data folds. We acknowledge that 3 folds leaves a large proportion of events in testing, but this allowed us to test more parameters as well as have some confidence in the testing. Since these validations occur "behind the scenes" of the code, (that is, we do not see how each subset of parameters perform), a large testing set has benefits. Further more, we chose models which not only performed relatively well in our baselines, but also ran particularly quickly. As such, we chose out $DT, LR$ and $RF$. We would have liked to analyze $SVM_P$ and $RF_B$ instead of $LR$ and $RF$, but they performed too poorly especially on $M^{F}$. Below are the parameters we tune for each model with the corresponding values
+
+\begin{itemize}
+	\item Decision Tree ($DT$)
+    	\begin{itemize}
+    	\item max depth of tree | [10, 22, 35, 47, 60, 72, 85, 97, 110, None]
+    	\item Number of features to consider | All, $\sqrt{n}$
+    	\item minimum samples per leaf | [25, 40, 60, 90, 120, 175]
+    	\item minimum samples to split | [25, 40, 60, 90, 120, 200]
+    	\end{itemize}
+	\item Logistic Regression ($LR$)
+	    \begin{itemize}
+    	\item C (regularization term) | [.0001, .001, .005, .01, .05, .1, 1, 10, 20]
+    	\item Penalty | L1, L2
+    	\item Solver | {\tt liblinear, saga}
+    	\end{itemize}
+	\item Random Forest ($RF$)
+	    \begin{itemize}
+    	\item $DT$ List
+    	\item number of trees in forest | [25, 64, 103, 142, 182, 221, 260, 300]
+    	\item Bootstrap sampling (binary) | {\tt True, False}
+    	\end{itemize}
+\end{itemize}
+
+We also must note that for $DT$ and $LR$, their training speed allowed us to perform a grid search on the subspace of possible parameter values, thus we tested all possible combinations of values from the predetermined sets of value. This is not true for $RF$ however which, due to the longer training time and larger number of hyper-parameters, necessitated we use a random search across the subspace. 
+
+Located in the appendix is the performance of the tuned models with what we found to be the optimal hyper-parameters. We show the performance of $DT, LR$ and $RF$ on the standard scaled data, for comparison to our voter.
+
+\subsection{Voter}
+
+After tuning our models, we admit that we see only marginal gains in performance, specifically our AUC, if that. We also notice that almost any attempt to improve a model's precision at this stage comes at the cost of it's recall. This dissuades us from further tuning models and instead look to how we could combine their results in the hopes of improving overall classification. 
+
+There is reasonable motivation behind this decision. We mentioned earlier that our baselines for $t=.9$ were quite poor, and thus we didn't follow through developing under this constraint. What we noticed more specifically, is that the incremental precision improvements we saw by increasing our threshold came at the cost of a large amount of precision. 
+
+This led us to speculate that there is perhaps a subset of $\gamma$ events which are particularly difficult to classify, and thus increasing our threshold would force our model to incorrectly predict $h$ for most of the members of this subset. We have exhausted attempts at improving a single model's performance such that it will classify this subset as $\gamma$ with the demanded confidence.  An alternative is to evaluate if different models are performing differently within this subset. We can say that, if there are difference in the evaluation of events in this subset across models, taking a hard voting across said models should improve our overall classification without cost on recall we pay by increasing our threshold. That is, if all 3 models are in agreement or disagreement (which should be the majority of events), the classifications of our voter will be the same. However, if a model disagrees with the other two (in either direction), we can override that classification through hard voting. Unless there is a standout algorithm, performing exceptionally well in this challenging area (which we highly doubt), the overall performance should improve in these edge case. We acknowledge that expectations of drastic metric improvement isn't warranted, but we do expect some metric improvement at little to no cost in recall. 
+
+This leads us to our stacking voting system, where we combine our 3 tuned models into a single classifier. The performance of our final stacked voting classifier is below.
+
+\begin{center}
+\begin{tabular}{|p{3cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+ \hline
+ \multicolumn{5}{|c|}{Metrics for Tuned Models} \\
+ \hline
+ Model | Metric & AUC  & Precision & Recall & Accuracy  \\
+ \hline
+ Voter  & .83 & .86 & .94 & .86 \\
+ \hline
+\end{tabular}
+\end{center}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width = 4in]{Voter.png} 
+    \caption{Stacked Voter ROC Curve}
+\end{figure}
+
+
+\section{Deployment}
+
+When discussing deployment, we must immediately acknowledge that the performance of our model(s) do not satisfy the requirements of the use case.
+
+In reality $\gamma$ events are much rarer than in $M$, thus there is a nontrivial cost to classifying a $\gamma$ event as noise, our false negative. In our models, we compensate for the more costly case of a false positive with $t$, but some improvements do come at the cost of more false positives. This could lead to wasting resources by overlooking events that should be investigated further. 
+
+There are some conclusions that we can draw. \cite{CaseStudy} discusses the existence of a limit (Bayesian limit) to the separability the algorithms tested could achieve. Thus we don't project ground-based telescopes absorbing the task of $\gamma$-ray observation completely. However, we found that certain algorithms can outperform others, as well as certain algorithms finding progress with different datasets. Particularly, we found that by using a stacked voting classifier, we could find a balanced model with and improved precision, which was a target metric. Given more models and more robust tuning, more progress should be possible. Finally, the computational bottleneck we reached indicates that more time is needed in the area of optimization, as well as possible improvements in hardware. 
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
-
+\newpage
 \printbibliography[title={Bibliography}] % Print the bibliography, section title in curly brackets
 
 %----------------------------------------------------------------------------------------
+
+\newpage
+\section*{Appendix}
+\subsection*{Pairplot}
+\centering
+\begin{figure}[h]
+\includegraphics[width = 7in]{pairplot.png} 
+\caption{Feature PairPlot}
+\end{figure}
+
+
+\newpage
+\subsection*{Baseline}
+
+\begin{figure}[!h]
+\centering
+\begin{tabular}{ccc}
+\subfloat[Decision Tree]{\includegraphics[width = 3in]{DT.png}} &
+\subfloat[Random Forest]{\includegraphics[width = 3in]{RF.png}} \\
+\subfloat[RF with Bagging]{\includegraphics[width = 3in]{bRF.png}} &
+\subfloat[LogReg]{\includegraphics[width = 3in]{LR.png}} \\
+\subfloat[SVM Linear]{\includegraphics[width = 3in]{SVM_l.png}} &
+\subfloat[SVM Poly]{\includegraphics[width = 3in]{SVM_p.png}}\\
+\end{tabular}
+\caption{Baseline ROC Curves}
+\end{figure}
+
+
+\newpage
+
+\begin{tabular}{ |p{3cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+ \hline
+ \multicolumn{5}{|c|}{Baselines for $M$} \\
+ \hline
+ Model | Metric & AUC  & Precision & Recall & Accuracy  \\
+ \hline
+ $DT$  & .80 & .87 & .86 & .82 \\
+ $RF$  & .83 & .95 & .74 & .80 \\
+ $RF_B$   & .83 & .95 & .74  & .81 \\
+ $LR$   & .75 & .90 & .62 & .71 \\
+ $SVM_L$  & .76 & .82 & .90 & .80 \\
+ $SVM_P$  & .69 & .76 & .97 & .78 \\
+ \hline
+\end{tabular}
+
+\begin{tabular}{ |p{3cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+ \hline
+ \multicolumn{5}{|c|}{Baselines for $M^{F}$} \\
+ \hline
+ Model | Metric & AUC  & Precision & Recall & Accuracy  \\
+ \hline
+ $DT$  & .81 & .87 & .85 & .82 \\
+ $RF$  & .83 & .95 & .73 & .80\\
+ $RF_B$   & .84 & .96 & .83 & .71 \\
+ $LR$   & .75 & .91 & .61 & .71 \\
+ $SVM_L$  & .79 & .84 & .90 & .82\\
+ $SVM_P$  & .65 & .73 & .97 & .85 \\
+ \hline
+\end{tabular}
+
+\begin{tabular}{ |p{3cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+ \hline
+ \multicolumn{5}{|c|}{Baselines for $M^{U}$} \\
+ \hline
+ Model | Metric & AUC  & Precision & Recall & Accuracy  \\
+ \hline
+ $DT$  & .90 & .93 & .86 & .90 \\
+ $RF$  & .84 & .97 & .70 & .84 \\
+ $RF_B$   & .82 & .98 & .65 & .82 \\
+ $LR$   & .64 & .86 & .33 & .64 \\
+ $SVM_L$  & .78 & .75 & .84 & .78 \\
+ $SVM_P$  & .73 & .66 & .93 & .73 \\
+ \hline
+\end{tabular}
+
+
+\newpage
+\subsection*{Tuned Models}
+
+\begin{tabular}{|p{3cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+ \hline
+ \multicolumn{5}{|c|}{Metrics for Tuned Models} \\
+ \hline
+ Model | Metric & AUC  & Precision & Recall & Accuracy  \\
+ \hline
+ $DT$  & .80 & .91 & .65 & .75 \\
+ $RF$  & .83 & .90 & .76 & .84 \\
+ $LR$   & .75 & .90 & .62 & .71 \\
+ \hline
+\end{tabular}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width = 5in]{DTLRRF.png} 
+\caption{Tuned ROC Curves}
+\end{figure}
+
 
 \end{document}

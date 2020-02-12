@@ -19,21 +19,13 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-
-%----------------------------------------------------------------------------------------
-%	FONTS
-%----------------------------------------------------------------------------------------
-
-\usepackage[T1]{fontenc} % Output font encoding for international characters
-\usepackage[utf8]{inputenc} % Required for inputting international characters
-
-\usepackage{XCharter} % Use the XCharter font
-
 \usepackage[english]{babel} % English language hyphenation
+
+\usepackage{setspace}
 
 \usepackage{microtype} % Better typography
 
-\usepackage{amsmath,amsfonts,amsthm, amssymb, amsthm, amstext} % Math packages for equations
+\usepackage{amsmath,amsfonts,amsthm} % Math packages for equations
 
 \usepackage[svgnames]{xcolor} % Enabling colors by their 'svgnames'
 
@@ -44,6 +36,8 @@
 \usepackage{lastpage} % Used to determine the number of pages in the document (for "Page X of Total")
 
 \usepackage{graphicx} % Required for adding images
+\graphicspath{ {./images/} }
+\usepackage{subfig}
 
 \usepackage{enumitem} % Required for customising lists
 \setlist{noitemsep} % Remove spacing between bullet/numbered list elements
@@ -69,6 +63,14 @@
 
 \setlength{\columnsep}{7mm} % Column separation width
 
+%----------------------------------------------------------------------------------------
+%	FONTS
+%----------------------------------------------------------------------------------------
+
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+
+\usepackage{XCharter} % Use the XCharter font
 
 %----------------------------------------------------------------------------------------
 %	HEADERS AND FOOTERS
@@ -114,11 +116,11 @@
 \pretitle{
 	\vspace{-30pt} % Move the entire title section up
 	\HorRule\vspace{10pt} % Horizontal rule before the title
-	\fontsize{32}{36}\usefont{OT1}{phv}{b}{n}\selectfont % Helvetica
+	\fontsize{24}{28}\usefont{OT1}{phv}{b}{n}\selectfont % Helvetica
 	\color{DarkRed} % Text colour for the title and author(s)
 }
 
-\posttitle{\par\vskip 15pt} % Whitespace under the title
+\posttitle{\par\vskip 10pt} % Whitespace under the title
 
 \preauthor{} % Anything that will appear before \author is printed
 
