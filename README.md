@@ -4,7 +4,7 @@ This is a project done for DS-GA 1001 on the MAGIC Telescopic Dataset
 
 Collaborators: Jeffrey Tumminia
 
-Goal: Build a c;assifier for identifying gamma rays from noisy simulated data.
+Goal: Build a classifier for identifying gamma rays from noisy simulated data.
 
 Learning Objective: Compare and constrast different supervised classification algorithms in effectiveness and efficiency.
 
@@ -41,4 +41,4 @@ Procedure:
 6) Show performace of tuned DT and LR + Build a voting classifier to improve overall classification.
 
 
-See paper for more details: 
+See paper for more details and references: 
